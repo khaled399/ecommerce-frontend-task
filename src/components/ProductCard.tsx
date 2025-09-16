@@ -2,7 +2,11 @@ import React, { useMemo, useState } from "react";
 import { useCart } from "../context/CartContext";
 import type { Product } from "../context/CartContext";
 
-type ProductCardProps = Product & { variants?: string[]; category?: string; quantity?: number };
+type ProductCardProps = Product & {
+  variants?: string[];
+  category?: string;
+  quantity?: number;
+};
 
 const ProductCard: React.FC<ProductCardProps> = ({
   id,
@@ -60,10 +64,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-[15px] md:text-base font-semibold text-gray-900 truncate" title={name}>
+          <h2
+            className="text-[15px] md:text-base font-semibold text-gray-900 truncate"
+            title={name}
+          >
             {name}
           </h2>
-          <span className={`text-xs font-medium ${isInStock ? "text-green-700" : "text-red-600"}`}>
+          <span
+            className={`text-xs font-medium ${
+              isInStock ? "text-green-700" : "text-red-600"
+            }`}
+          >
             {isInStock ? `In stock: ${stock}` : "Out of stock"}
           </span>
         </div>
@@ -96,8 +107,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
           onClick={async () => {
             if (!canAdd) return;
             try {
-              const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-              const res = await fetch(`${API_BASE}/products/${id}/decrement`, { method: "PATCH" });
+              const API_BASE =
+                import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+              const res = await fetch(`${API_BASE}/products/${id}/decrement`, {
+                method: "PATCH",
+              });
               if (res.status === 409) {
                 setStock(0);
                 setLocallyAvailable(false);
@@ -105,7 +119,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
               }
               if (!res.ok) throw new Error("Failed to reserve stock");
               const updated = await res.json();
-              if (typeof updated.quantity === "number") setStock(updated.quantity);
+              if (typeof updated.quantity === "number")
+                setStock(updated.quantity);
               addToCart(
                 { id, name, price, image, available },
                 { variant: selectedVariant || undefined, quantity: 1 }
@@ -120,10 +135,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
               : "bg-gray-200 text-gray-500 cursor-not-allowed"
           } inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2`}
           aria-disabled={!canAdd}
-          aria-label={isInStock ? `Add ${name} to cart` : `${name} is out of stock`}
+          aria-label={
+            isInStock ? `Add ${name} to cart` : `${name} is out of stock`
+          }
           title={isInStock ? "Add to Cart" : "Out of Stock"}
         >
-          {isInStock ? (requiresVariant && !selectedVariant ? "Select a variant" : "Add to Cart") : "Out of Stock"}
+          {isInStock
+            ? requiresVariant && !selectedVariant
+              ? "Select a variant"
+              : "Add to Cart"
+            : "Out of Stock"}
         </button>
       </div>
     </div>

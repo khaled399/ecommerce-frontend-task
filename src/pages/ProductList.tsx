@@ -4,9 +4,13 @@ import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
 import type { Product } from "../context/CartContext";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
-type ApiProduct = Product & { category?: string; variants?: string[]; quantity?: number };
+type ApiProduct = Product & {
+  category?: string;
+  variants?: string[];
+  quantity?: number;
+};
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<ApiProduct[]>([]);
@@ -24,7 +28,9 @@ const ProductList: React.FC = () => {
         setLoading(true);
         setError(null);
         const url = selectedCategory
-          ? `${API_BASE}/products?category=${encodeURIComponent(selectedCategory)}`
+          ? `${API_BASE}/products?category=${encodeURIComponent(
+              selectedCategory
+            )}`
           : `${API_BASE}/products`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Failed to load products (${res.status})`);
@@ -37,7 +43,9 @@ const ProductList: React.FC = () => {
               new Set(
                 data
                   .map((p) => p.category)
-                  .filter((c): c is string => typeof c === "string" && c.length > 0)
+                  .filter(
+                    (c): c is string => typeof c === "string" && c.length > 0
+                  )
               )
             );
             setCategories(uniq);
@@ -66,7 +74,12 @@ const ProductList: React.FC = () => {
               to="/"
               className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <svg className="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                className="-ml-0.5 mr-2 h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
               Home
@@ -75,7 +88,10 @@ const ProductList: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse">
+              <div
+                key={i}
+                className="h-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse"
+              >
                 <div className="w-full aspect-[4/3] bg-gray-200 rounded-xl mb-3" />
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
                 <div className="h-4 bg-gray-200 rounded w-1/2 mb-4" />
@@ -96,7 +112,12 @@ const ProductList: React.FC = () => {
             to="/"
             className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            <svg className="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              className="-ml-0.5 mr-2 h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
             Home
@@ -104,9 +125,11 @@ const ProductList: React.FC = () => {
         </div>
         <div className="p-4 bg-red-50 text-red-700 rounded-lg border border-red-200">
           <h3 className="text-lg font-medium mb-2">Failed to load products</h3>
-          <p>{typeof error === 'object' && error !== null && 'message' in error ? 
-              (error as { message: string }).message : 
-              String(error)}</p>
+          <p>
+            {typeof error === "object" && error !== null && "message" in error
+              ? (error as { message: string }).message
+              : String(error)}
+          </p>
           <button
             onClick={() => window.location.reload()}
             className="mt-3 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -126,17 +149,27 @@ const ProductList: React.FC = () => {
             to="/"
             className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            <svg className="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              className="-ml-0.5 mr-2 h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
             Home
           </Link>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Products</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Products
+            </h1>
             <p className="mt-1 text-gray-600">Browse our latest selection</p>
           </div>
         </div>
-        <Link to="/cart" className="relative inline-flex items-center text-sm text-gray-700 hover:text-gray-900">
+        <Link
+          to="/cart"
+          className="relative inline-flex items-center text-sm text-gray-700 hover:text-gray-900"
+        >
           Cart
           <span className="ml-2 inline-flex items-center justify-center min-w-5 h-5 px-1 text-xs font-medium rounded-full bg-blue-600 text-white">
             {cartCount}

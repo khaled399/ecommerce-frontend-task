@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 
 export type Product = {
@@ -13,8 +19,15 @@ export type CartItem = Product & { quantity: number; variant?: string };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Product, options?: { variant?: string; quantity?: number }) => void;
-  updateQuantity: (id: number, quantity: number, options?: { variant?: string }) => void;
+  addToCart: (
+    product: Product,
+    options?: { variant?: string; quantity?: number }
+  ) => void;
+  updateQuantity: (
+    id: number,
+    quantity: number,
+    options?: { variant?: string }
+  ) => void;
   removeFromCart: (id: number, options?: { variant?: string }) => void;
   clearCart: () => Promise<void>;
   cartCount: number; // total quantity
@@ -25,7 +38,9 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const STORAGE_KEY = "app_cart_v1";
 
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -47,7 +62,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const variant = options?.variant;
     const quantity = Math.max(1, Math.floor(options?.quantity ?? 1));
     setCart((prev) => {
-      const idx = prev.findIndex((i) => i.id === product.id && i.variant === variant);
+      const idx = prev.findIndex(
+        (i) => i.id === product.id && i.variant === variant
+      );
       if (idx >= 0) {
         const next = [...prev];
         next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity };
@@ -57,22 +74,31 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
-  const updateQuantity: CartContextType["updateQuantity"] = (id, quantity, options) => {
+  const updateQuantity: CartContextType["updateQuantity"] = (
+    id,
+    quantity,
+    options
+  ) => {
     setCart((prev) => {
       const variant = options?.variant;
       return prev
-        .map((i) => (i.id === id && i.variant === variant ? { ...i, quantity } : i))
+        .map((i) =>
+          i.id === id && i.variant === variant ? { ...i, quantity } : i
+        )
         .filter((i) => i.quantity > 0);
     });
   };
 
   const removeFromCart: CartContextType["removeFromCart"] = (id, options) => {
     const variant = options?.variant;
-    setCart((prev) => prev.filter((i) => !(i.id === id && i.variant === variant)));
+    setCart((prev) =>
+      prev.filter((i) => !(i.id === id && i.variant === variant))
+    );
   };
 
   const clearCart = async () => {
-    const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+    const API_BASE =
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
     try {
       await Promise.all(
         cart.map((item) =>
@@ -88,8 +114,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const cartCount = useMemo(() => cart.reduce((sum, i) => sum + i.quantity, 0), [cart]);
-  const cartTotal = useMemo(() => cart.reduce((sum, i) => sum + i.price * i.quantity, 0), [cart]);
+  const cartCount = useMemo(
+    () => cart.reduce((sum, i) => sum + i.quantity, 0),
+    [cart]
+  );
+  const cartTotal = useMemo(
+    () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    [cart]
+  );
 
   const value: CartContextType = {
     cart,

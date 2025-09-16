@@ -26,7 +26,7 @@ const ProductDetails: React.FC = () => {
     const fetchProduct = async () => {
       try {
         const API_BASE =
-          import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
         const response = await fetch(`${API_BASE}/products/${id}`);
         if (!response.ok) {
           throw new Error("Product not found");
